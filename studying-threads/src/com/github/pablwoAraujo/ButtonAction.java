@@ -2,7 +2,6 @@ package com.github.pablwoAraujo;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigInteger;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -21,17 +20,13 @@ public class ButtonAction implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
-		long valor1 = Long.parseLong(primeiro.getText());
-		long valor2 = Long.parseLong(segundo.getText());
-		BigInteger calculo = new BigInteger("0");
 
-		for (int i = 0; i < valor1; i++) {
-			for (int j = 0; j < valor2; j++) {
-				calculo = calculo.add(new BigInteger("1"));
-			}
-		}
+		// Criando o código executável pela thread
+		Runnable multiplication = new MultiplicationTask(primeiro, segundo, resultado);
+		// Criando a Thread e passando o executável (runnable) e um nome
+		Thread multiplicationThread = new Thread(multiplication, "Multiplication Thread");
 
-		resultado.setText(calculo.toString());
+		// iniciando a thread
+		multiplicationThread.start();
 	}
 }
