@@ -1,4 +1,4 @@
-package com.github.pablwoAraujo;
+package com.github.pablwoAraujo.calculator;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;

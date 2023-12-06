@@ -1,4 +1,4 @@
-package com.github.pablwoAraujo;
+package com.github.pablwoAraujo.calculator;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
