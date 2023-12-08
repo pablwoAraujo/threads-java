@@ -3,10 +3,19 @@ package com.github.pablwoAraujo.list;
 import java.util.Arrays;
 
 public class Lista {
-	private String[] elementos = new String[100];
+	private String[] elementos = new String[1000];
 	private int indice = 0;
 
-	public void adicionaElementos(String elemento) {
+	// protengendo o método de duas ou mais threads acessarem simultaneamente, garantindo a consistência
+//	public void adicionaElementos(String elemento) {
+//		synchronized(this){
+//			this.elementos[indice] = elemento;
+//			this.indice++;			
+//		}
+//	}
+
+	// Outra maneira de sincronizar o método
+	public synchronized void adicionaElementos(String elemento) {
 		this.elementos[indice] = elemento;
 		this.indice++;
 	}

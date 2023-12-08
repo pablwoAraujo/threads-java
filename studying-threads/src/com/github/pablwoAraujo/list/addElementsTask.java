@@ -12,7 +12,7 @@ public class addElementsTask implements Runnable {
 
 	@Override
 	public void run() {
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 100; i++) {
 			lista.adicionaElementos("Thread " + threadNumber + " - " + i);
 		}
 	}
