@@ -16,6 +16,11 @@ public class Lista {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
+		if (this.indice == this.tamanho()) {
+			System.out.println("Lista está cheia, notificando");
+			this.notify();
+		}
 	}
 
 	public int tamanho() {
@@ -29,5 +34,9 @@ public class Lista {
 	@Override
 	public String toString() {
 		return Arrays.toString(elementos);
+	}
+
+	public boolean isFull() {
+		return this.indice == this.tamanho();
 	}
 }
