@@ -14,7 +14,8 @@ public class TaskServer {
 			Socket socket = server.accept();
 			System.out.println("Aceitando novo client na porta: " + socket.getPort());
 
-			Thread.sleep(20000);
+			AllocateTasks allocateTasks = new AllocateTasks(socket);
+			new Thread(allocateTasks).start();
 		}
 
 	}
