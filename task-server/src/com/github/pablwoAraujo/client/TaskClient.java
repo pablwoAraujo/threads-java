@@ -1,6 +1,7 @@
 package com.github.pablwoAraujo.client;
 
 import java.net.Socket;
+import java.util.Scanner;
 
 public class TaskClient {
 
@@ -10,6 +11,10 @@ public class TaskClient {
 
 		Socket socket = new Socket("localhost", port);
 		System.out.println("Conexao estabelecida");
+
+		Scanner scanner = new Scanner(System.in);
+		scanner.nextLine();
+
 		socket.close();
 	}
 

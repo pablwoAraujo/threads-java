@@ -13,6 +13,8 @@ public class TaskServer {
 		while (true) {
 			Socket socket = server.accept();
 			System.out.println("Aceitando novo client na porta: " + socket.getPort());
+
+			Thread.sleep(20000);
 		}
 
 	}
