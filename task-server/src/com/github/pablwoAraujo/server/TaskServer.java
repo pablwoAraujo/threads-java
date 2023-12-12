@@ -10,7 +10,10 @@ public class TaskServer {
 		int port = 12345;
 		ServerSocket server = new ServerSocket(port);
 
-		Socket socket = server.accept();
+		while (true) {
+			Socket socket = server.accept();
+			System.out.println("Aceitando novo client na porta: " + socket.getPort());
+		}
 
 	}
 
