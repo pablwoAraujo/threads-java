@@ -10,7 +10,14 @@ public class CleaningTask implements Runnable {
 
 	@Override
 	public void run() {
-		bathroom.cleanBathroom();
+		while (true) {
+			bathroom.cleanBathroom();
+			try {
+				Thread.sleep(15000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

@@ -11,7 +11,7 @@ public class Bathroom {
 		synchronized (this) {
 			System.out.println(name + " Entrando no banheiro");
 
-			if (dirty) {
+			while (dirty) {
 				waitCleanBathroom(name);
 			}
 
@@ -32,7 +32,7 @@ public class Bathroom {
 		synchronized (this) {
 			System.out.println(name + " Entrando no banheiro");
 
-			if (dirty) {
+			while (dirty) {
 				waitCleanBathroom(name);
 			}
 

@@ -6,6 +6,7 @@ public class Main {
 		Bathroom bathroom = new Bathroom();
 
 		Thread cleaner = new Thread(new CleaningTask(bathroom), "Cleaner");
+		cleaner.setDaemon(true);
 		Thread guest01 = new Thread(new NumberOneTask(bathroom), "João");
 		Thread guest02 = new Thread(new NumberTwoTask(bathroom), "Pedro");
 		// Thread guest03 = new Thread(new NumberOneTask(bathroom), "Pablwo");
