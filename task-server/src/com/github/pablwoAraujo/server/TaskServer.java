@@ -10,10 +10,13 @@ public class TaskServer {
 	public static void main(String[] args) throws Exception {
 		System.out.println("--- Starting the server ---");
 		int port = 12345;
-		int numberOfThreads = 2;
 
 		ServerSocket server = new ServerSocket(port);
-		ExecutorService threadPool = Executors.newFixedThreadPool(numberOfThreads); // criando um pool de threads de tamanho estático
+		// Criando um pool de threads de tamanho estático
+		// ExecutorService threadPool = Executors.newFixedThreadPool(2);
+
+		// Criando um pool de threads de tamanho dinâmico
+		ExecutorService threadPool = Executors.newCachedThreadPool();
 
 		while (true) {
 			Socket socket = server.accept();
