@@ -53,8 +53,7 @@ public class TaskClient {
 
 					while (serverResponse.hasNextLine()) {
 						String line = serverResponse.nextLine();
-						//System.out.println("[" + socket.getLocalAddress() + "] " + line);
-						System.out.println(line);
+						System.out.println("[" + socket.getLocalAddress() + ":" + socket.getPort() + "] " + line);
 					}
 
 					serverResponse.close();
