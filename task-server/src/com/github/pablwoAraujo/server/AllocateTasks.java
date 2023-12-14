@@ -1,6 +1,5 @@
 package com.github.pablwoAraujo.server;
 
-import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -21,7 +20,7 @@ public class AllocateTasks implements Runnable {
 
 			while (inputClient.hasNextLine()) {
 				String command = inputClient.nextLine();
-				System.out.println(command);
+				System.out.println("[" + socket.getLocalAddress() + ":" + socket.getPort() + "] " + command);
 			}
 
 			inputClient.close();

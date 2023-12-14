@@ -11,16 +11,64 @@ public class TaskClient {
 		int port = 12345;
 
 		Socket socket = new Socket("localhost", port);
-		System.out.println("Conexao estabelecida");
+		System.out.println("--- Connection established ---");
 
-		PrintStream print = new PrintStream(socket.getOutputStream());
-		print.println("c1");
+		// Enviando comandos para o servidor
+		Thread sendCommands = new Thread(new Runnable() {
 
-		Scanner scanner = new Scanner(System.in);
-		scanner.nextLine();
+			@Override
+			public void run() {
+				try {
+					System.out.println("--- Ready to send commands to the server ---");
 
-		print.close();
-		scanner.close();
+					PrintStream output = new PrintStream(socket.getOutputStream());
+					Scanner scanner = new Scanner(System.in);
+
+					while (scanner.hasNextLine()) {
+						String line = scanner.nextLine();
+
+						if (line.trim().equals("")) {
+							break;
+						}
+
+						output.println(line);
+					}
+					scanner.close();
+					output.close();
+				} catch (Exception e) {
+					throw new RuntimeException();
+				}
+			}
+		});
+
+		// Recebendo a resposta do servidor
+		Thread receiveResponse = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					System.out.println("--- Ready to listen for server response ---");
+
+					Scanner serverResponse = new Scanner(socket.getInputStream());
+
+					while (serverResponse.hasNextLine()) {
+						String line = serverResponse.nextLine();
+						//System.out.println("[" + socket.getLocalAddress() + "] " + line);
+						System.out.println(line);
+					}
+
+					serverResponse.close();
+				} catch (Exception e) {
+					throw new RuntimeException();
+				}
+			}
+		});
+
+		receiveResponse.start();
+		sendCommands.start();
+
+		sendCommands.join();
+		System.out.println("--- Closing the socket ---");
 		socket.close();
 	}
 
