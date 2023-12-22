@@ -1,31 +1,50 @@
 package com.github.pablwoAraujo.server;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TaskServer {
 
-	public static void main(String[] args) throws Exception {
+	private static final int port = 12345;
+	private ServerSocket server;
+	private ExecutorService threadPool;
+	private boolean running;
+
+	public TaskServer() throws IOException {
 		System.out.println("--- Starting the server ---");
-		int port = 12345;
+		this.server = new ServerSocket(port);
+		this.threadPool = Executors.newCachedThreadPool();
+		this.running = true;
+	}
 
-		ServerSocket server = new ServerSocket(port);
-		// Criando um pool de threads de tamanho estático
-		// ExecutorService threadPool = Executors.newFixedThreadPool(2);
+	public static void main(String[] args) throws Exception {
+		TaskServer taskServer = new TaskServer();
+		taskServer.run();
+		taskServer.stop();
+	}
 
-		// Criando um pool de threads de tamanho dinâmico
-		ExecutorService threadPool = Executors.newCachedThreadPool();
+	private void run() throws IOException {
+		while (this.running) {
+			try {
+				Socket socket = server.accept();
+				System.out.println("Aceitando novo client na porta: " + socket.getPort());
 
-		while (true) {
-			Socket socket = server.accept();
-			System.out.println("Aceitando novo client na porta: " + socket.getPort());
-
-			AllocateTasks allocateTasks = new AllocateTasks(socket);
-			threadPool.execute(allocateTasks); // Buscando uma thread da pool para executar a tarefa
+				AllocateTasks allocateTasks = new AllocateTasks(socket, this);
+				threadPool.execute(allocateTasks); // Buscando uma thread da pool para executar a tarefa
+			} catch (SocketException e) {
+				System.out.println(e);
+			}
 		}
+	}
 
+	public void stop() throws IOException {
+		this.running = false;
+		server.close();
+		threadPool.shutdown();
 	}
 
 }

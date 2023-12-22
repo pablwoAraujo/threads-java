@@ -7,9 +7,11 @@ import java.util.Scanner;
 public class AllocateTasks implements Runnable {
 
 	private Socket socket;
+	private TaskServer server;
 
-	public AllocateTasks(Socket socket) {
+	public AllocateTasks(Socket socket, TaskServer server) {
 		this.socket = socket;
+		this.server = server;
 	}
 
 	@Override
@@ -31,6 +33,11 @@ public class AllocateTasks implements Runnable {
 				}
 				case "c2": {
 					responseToClient.println("c2 Command Confirmed");
+					break;
+				}
+				case "close": {
+					responseToClient.println("Shutting Down The Server");
+					server.stop();
 					break;
 				}
 				default: {
