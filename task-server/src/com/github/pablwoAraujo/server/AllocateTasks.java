@@ -4,6 +4,7 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 public class AllocateTasks implements Runnable {
 
@@ -38,8 +39,13 @@ public class AllocateTasks implements Runnable {
 				}
 				case "c2": {
 					responseToClient.println("c2 Command Confirmed");
-					CommandC2 c2 = new CommandC2(responseToClient);
-					threadPool.execute(c2);
+					CommandC2AccessDatabase c2DB = new CommandC2AccessDatabase(responseToClient);
+					CommandC2CallsWebService c2WS = new CommandC2CallsWebService(responseToClient);
+
+					Future<String> futureDB = threadPool.submit(c2DB);
+					Future<String> futureWS = threadPool.submit(c2WS);
+
+					this.threadPool.submit(new ProcessesC2CommandResults(futureDB, futureWS,responseToClient));
 					break;
 				}
 				case "close": {
