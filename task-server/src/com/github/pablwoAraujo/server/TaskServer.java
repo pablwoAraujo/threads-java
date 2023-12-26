@@ -24,7 +24,10 @@ public class TaskServer {
 	public TaskServer() throws IOException {
 		System.out.println("--- Starting the server ---");
 		this.server = new ServerSocket(port);
-		this.threadPool = Executors.newCachedThreadPool();
+
+		// this.threadPool = Executors.newCachedThreadPool();
+		this.threadPool = Executors.newFixedThreadPool(4, new CustomThreadFactory());
+
 		this.running = new AtomicBoolean(true);
 	}
 
@@ -40,7 +43,7 @@ public class TaskServer {
 				Socket socket = server.accept();
 				System.out.println("Aceitando novo client na porta: " + socket.getPort());
 
-				AllocateTasks allocateTasks = new AllocateTasks(socket, this);
+				AllocateTasks allocateTasks = new AllocateTasks(threadPool, socket, this);
 				// Buscando uma thread da pool para executar a tarefa
 				threadPool.execute(allocateTasks);
 			} catch (SocketException e) {

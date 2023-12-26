@@ -3,15 +3,18 @@ package com.github.pablwoAraujo.server;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
 
 public class AllocateTasks implements Runnable {
 
 	private Socket socket;
 	private TaskServer server;
+	private ExecutorService threadPool;
 
-	public AllocateTasks(Socket socket, TaskServer server) {
+	public AllocateTasks(ExecutorService threadPool, Socket socket, TaskServer server) {
 		this.socket = socket;
 		this.server = server;
+		this.threadPool = threadPool;
 	}
 
 	@Override
@@ -29,10 +32,14 @@ public class AllocateTasks implements Runnable {
 				switch (command) {
 				case "c1": {
 					responseToClient.println("c1 Command Confirmed");
+					CommandC1 c1 = new CommandC1(responseToClient);
+					threadPool.execute(c1);
 					break;
 				}
 				case "c2": {
 					responseToClient.println("c2 Command Confirmed");
+					CommandC2 c2 = new CommandC2(responseToClient);
+					threadPool.execute(c2);
 					break;
 				}
 				case "close": {
