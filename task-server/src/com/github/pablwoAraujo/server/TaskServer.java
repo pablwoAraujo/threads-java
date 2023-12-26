@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -20,6 +22,8 @@ public class TaskServer {
 	// Outra alternativa é usar o tipo "AtomicBoolean", que implementa por baixo
 	// dos panos um boolean com o modificador "volatile".
 	private AtomicBoolean running;
+	private BlockingQueue<String> commandQueue;
+
 
 	public TaskServer() throws IOException {
 		System.out.println("--- Starting the server ---");
@@ -29,6 +33,10 @@ public class TaskServer {
 		this.threadPool = Executors.newFixedThreadPool(4, new CustomThreadFactory());
 
 		this.running = new AtomicBoolean(true);
+		
+		// Instanciando a fila de comandos
+		commandQueue = new ArrayBlockingQueue<String>(2);
+
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -43,7 +51,7 @@ public class TaskServer {
 				Socket socket = server.accept();
 				System.out.println("Aceitando novo client na porta: " + socket.getPort());
 
-				AllocateTasks allocateTasks = new AllocateTasks(threadPool, socket, this);
+				AllocateTasks allocateTasks = new AllocateTasks(threadPool, commandQueue, socket, this);
 				// Buscando uma thread da pool para executar a tarefa
 				threadPool.execute(allocateTasks);
 			} catch (SocketException e) {

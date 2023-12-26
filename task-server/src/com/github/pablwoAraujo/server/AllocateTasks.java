@@ -3,6 +3,8 @@ package com.github.pablwoAraujo.server;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.Scanner;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -11,8 +13,10 @@ public class AllocateTasks implements Runnable {
 	private Socket socket;
 	private TaskServer server;
 	private ExecutorService threadPool;
+	private BlockingQueue<String> queue;
 
-	public AllocateTasks(ExecutorService threadPool, Socket socket, TaskServer server) {
+	public AllocateTasks(ExecutorService threadPool, BlockingQueue<String> queue, Socket socket, TaskServer server) {
+		this.queue = queue;
 		this.socket = socket;
 		this.server = server;
 		this.threadPool = threadPool;
@@ -45,7 +49,21 @@ public class AllocateTasks implements Runnable {
 					Future<String> futureDB = threadPool.submit(c2DB);
 					Future<String> futureWS = threadPool.submit(c2WS);
 
-					this.threadPool.submit(new ProcessesC2CommandResults(futureDB, futureWS,responseToClient));
+					this.threadPool.submit(new ProcessesC2CommandResults(futureDB, futureWS, responseToClient));
+					break;
+				}
+				case "c3": {
+					responseToClient.println("Processing C3 Command");
+
+					CommandC3 c3 = new CommandC3(queue, responseToClient, command);
+					threadPool.execute(c3);
+					break;
+				}
+				case "consume": {
+					responseToClient.println("Processing Consume Command");
+
+					CommandConsume consume = new CommandConsume(queue, responseToClient);
+					threadPool.execute(consume);
 					break;
 				}
 				case "close": {
